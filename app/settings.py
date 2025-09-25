@@ -7,8 +7,8 @@ class Settings(BaseModel):
     FRAME_H: int = 480
 
     # ROI (entry hole)
-    ROI_CX: int = 320
-    ROI_CY: int = 165
+    ROI_CX: int = 310
+    ROI_CY: int = 190
     ROI_R: int = 55
 
     # Detection thresholds
