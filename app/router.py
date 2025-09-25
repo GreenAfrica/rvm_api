@@ -38,7 +38,7 @@ def reject_event():
 @router.get("/qr.png")
 def qr_png(code: Optional[str] = None):
     code = code or state.last_code or "NO-CODE"
-    img = qrcode.make(f"RVM:{code}")
+    img = qrcode.make(f"http://green.africa?code={code}")
     buf = io.BytesIO(); img.save(buf, format="PNG")
     return Response(content=buf.getvalue(), media_type="image/png")
 

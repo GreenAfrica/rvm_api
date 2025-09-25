@@ -419,10 +419,6 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 4. Add tests if applicable
 5. Submit a pull request
 
-## License
-
-[Add your license information here]
-
 ## Support
 
 For issues and questions:
