@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Response, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import Optional
-import io, qrcode, cv2
+import io, qrcode, cv2, time
 
 from .models import state, event_lock
 from .events import register_accept, register_reject
@@ -102,6 +103,45 @@ def reseed_background():
 
 
 # -------------------- Debug / Tooling --------------------
+def generate_frames():
+    """Generator function for MJPEG stream"""
+    while True:
+        try:
+            # Get latest frame from detector buffer
+            frame = detector.frame_buf[-1] if detector.frame_buf else None
+            if frame is None:
+                # Fallback to live capture if no buffered frame
+                ok, frame = detector.cap.read()
+                if not ok:
+                    time.sleep(0.1)
+                    continue
+            
+            # Encode frame as JPEG
+            ok, buffer = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), settings.JPEG_QUALITY])
+            if not ok:
+                time.sleep(0.1)
+                continue
+                
+            # Yield frame in multipart format
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + 
+                   buffer.tobytes() + b'\r\n')
+            
+            # Control frame rate (approximately 30 FPS)
+            time.sleep(0.033)
+            
+        except Exception as e:
+            print(f"Stream error: {e}")
+            time.sleep(0.1)
+
+@router.get("/stream")
+def video_stream():
+    """MJPEG video stream endpoint"""
+    return StreamingResponse(
+        generate_frames(), 
+        media_type="multipart/x-mixed-replace; boundary=frame"
+    )
+
 @router.get("/frame.jpg")
 def latest_frame():
     frame = detector.frame_buf[-1] if detector.frame_buf else None
