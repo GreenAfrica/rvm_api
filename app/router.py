@@ -39,7 +39,7 @@ def reject_event():
 def qr_png(code: Optional[str] = None):
     code = code or state.last_code or "NO-CODE"
     points = state.points or 0
-    img = qrcode.make(f"http://green.africa?code={code}&points={points}")
+    img = qrcode.make(f"http://greenafrica.earth/points?code={code}&points={points}")
     buf = io.BytesIO(); img.save(buf, format="PNG")
     return Response(content=buf.getvalue(), media_type="image/png")
 
