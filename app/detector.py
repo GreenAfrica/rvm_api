@@ -111,9 +111,9 @@ class Detector:
 
             # HUD overlay for tooling & store latest frame
             cv2.circle(frame, (settings.ROI_CX, settings.ROI_CY), settings.ROI_R, (0,255,0), 2)
-            cv2.putText(frame, f"ROI hot: {hot_pixels}", (10, 84), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
+            # cv2.putText(frame, f"ROI hot: {hot_pixels}", (10, 84), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
             cv2.putText(frame, f"Status: {state.message}", (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
-            cv2.putText(frame, f"Points: {state.points}", (10, 56), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
+            # cv2.putText(frame, f"Points: {state.points}", (10, 56), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
 
             self.frame_buf.append(frame)
             time.sleep(0.01)
